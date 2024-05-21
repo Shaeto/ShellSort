@@ -1,0 +1,29 @@
+cabal-version:      3.0
+name:               sort-shell
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            GPL-3.0-or-later
+license-file:       LICENSE
+author:             Evgeny Sabelskiy
+maintainer:         evgeny.sabelskiy@gmail.com
+-- copyright:
+category:           Math
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+executable sort-shell
+    import:           warnings
+    main-is:          Main.hs
+    other-modules:    Shellsort
+    -- other-extensions:
+    build-depends:    base ^>=4.17.2.1,
+                      time ^>=1.12.2,
+                      random ^>= 1.2.1.2
+
+    hs-source-dirs:   app
+    default-language: Haskell2010
