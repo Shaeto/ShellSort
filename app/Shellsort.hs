@@ -7,28 +7,29 @@
 module Shellsort where
 
 -- | sort elements using a list of gaps provided ba caller
-shellSort :: (Ord a) => [a] -> [Int] -> [a]
-shellSort l gaps =
+shellSort :: (Ord a) => [Int] -> [a] -> [a]
+shellSort gaps l =
     let len = length l
-    in foldl insertionSort l [x | gap <- gaps, x <- [ [n, (n + gap) .. (len - 1)] | n <- [ 0.. (gap - 1)]] ]
+    in foldl (flip insertionSort) l $ gapsToSublists len gaps
 
--- | sort elements using a standard list of gaps suggested by Shell
-shellSort1 :: (Ord a) => [a] -> [a]
-shellSort1 l = shellSort l $ gapsShell $ length l
+-- | generate indexes of all possible sublists
+gapsToSublists :: Int -> [Int] -> [[Int]]
+gapsToSublists len gaps =
+    [ x | gap <- gaps, x <- [ [n, (n + gap) .. (len - 1)] | n <- [ 0.. (gap - 1)]] ]
 
 -- | sub-list insertion sort
 -- sub-list is defined by list of indexes
-insertionSort :: (Ord a) => [a] -> [Int] -> [a]
-insertionSort [] _ = []
-insertionSort l [] = l
-insertionSort l li =
-    fst $ foldl (\acc x -> let lp = snd acc ++ [x] in (sortLastPair (fst acc) lp, lp)) (l, []) (zip li $ drop 1 li)
+insertionSort :: (Ord a) => [Int] -> [a] -> [a]
+insertionSort _ [] = []
+insertionSort [] l = l
+insertionSort li l =
+    snd $ foldl (\acc x -> let lp = fst acc ++ [x] in (lp, sortLastPair lp (snd acc))) ([], l) (zip li $ drop 1 li)
 
 -- | moves unsorted element defined by last pair to correct position in the sorted part of the (sub)list
-sortLastPair :: (Ord a) => [a] -> [(Int, Int)] -> [a]
-sortLastPair l [] = l
-sortLastPair l lp
-    | item1 > item2 = sortLastPair (swapItems l pair) (init lp)
+sortLastPair :: (Ord a) => [(Int, Int)] -> [a] -> [a]
+sortLastPair [] l = l
+sortLastPair lp l
+    | item1 > item2 = sortLastPair (init lp) (swapItems pair l)
     | otherwise = l
     where
         item1 = l !! fst pair
@@ -36,10 +37,10 @@ sortLastPair l lp
         pair = last lp
 
 -- | exchange two elements of the list
-swapItems :: [a] -> (Int, Int) -> [a]
-swapItems l (i1, i2)
+swapItems :: (Int, Int) -> [a] -> [a]
+swapItems (i1, i2) l
     | i1 == i2 = l
-    | i1 > i2 = swapItems l (i2, i1)
+    | i1 > i2 = swapItems (i2, i1) l
     | otherwise = take i1 l ++ [item2] ++ take (i2 - i1 - 1) (drop (i1+1) l) ++ [item1] ++ drop (i2 + 1) l
         where
             item1 = l !! i1

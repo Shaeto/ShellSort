@@ -13,20 +13,21 @@ main = do
     -- print a test set
     putStrLn "Test set is:"
     putStrLn $ show xs
+    putStrLn ""
 
     -- print a sorted test set
     putStrLn $ "Shell sort using Shell gaps: " ++ (show $ gapsShell $ length xs)
-    putStrLn $ show $ shellSort xs $ gapsShell $ length xs
+    putStrLn $ show $ shellSort (gapsShell $ length xs) xs
     putStrLn ""
 
     putStrLn $ "Shell sort using Hibbard gaps: " ++ (show $ gapsHibbard $ length xs)
-    putStrLn $ show $ shellSort xs $ gapsHibbard $ length xs
+    putStrLn $ show $ shellSort (gapsHibbard $ length xs) xs
     putStrLn ""
 
     putStrLn $ "Shell sort using Frank & Lazaus gaps: " ++ (show $ gapsFrankLazaus $ length xs)
-    putStrLn $ show $ shellSort xs $ gapsFrankLazaus $ length xs
+    putStrLn $ show $ shellSort (gapsFrankLazaus $ length xs) xs
     putStrLn ""
 
     putStrLn $ "Shell sort using Ciura gaps: " ++ (show gapsCiura)
-    putStrLn $ show $ shellSort xs $ gapsCiura
+    putStrLn $ show $ shellSort gapsCiura xs
     putStrLn ""
